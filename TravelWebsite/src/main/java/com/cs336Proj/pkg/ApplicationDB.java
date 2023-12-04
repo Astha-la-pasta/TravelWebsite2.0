@@ -10,6 +10,7 @@ public class ApplicationDB {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	public Connection getConnection(){
 		
 		//Create a connection string
