@@ -12,6 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.cs336.pkg.ApplicationDB;
+
 import java.sql.DatabaseMetaData;
 
 public class ApplicationDB {
@@ -23,32 +26,31 @@ public class ApplicationDB {
 	public Connection getConnection(){
 		
 		//Create a connection string
-		String connectionUrl = "jdbc:mysql://localhost:3306/TravelWebsiteSQL";
-		Connection connection = null;
-		
-		try {
-			//Load JDBC driver - the interface standardizing the connection procedure. Look at WEB-INF\lib for a mysql connector jar file, otherwise it fails.
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			//Create a connection to your DB
-			connection = DriverManager.getConnection(connectionUrl,"root", "12345678");
-			//System.out.println("Inside connection");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return connection;
+				String connectionUrl = "jdbc:mysql://localhost:3306/TravelWebsiteSQL";
+				Connection connection = null;
+				
+				try {
+					//Load JDBC driver - the interface standardizing the connection procedure. Look at WEB-INF\lib for a mysql connector jar file, otherwise it fails.
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+				} catch (InstantiationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				try {
+					//Create a connection to your DB
+					connection = DriverManager.getConnection(connectionUrl,"root", "12345678");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return connection;
 		
 	}
 	
@@ -111,7 +113,8 @@ public class ApplicationDB {
 			}
 		}	
 		
-	}*/
+	}
+	*/
 	
 	public Map<Integer, Float> getFlights(String airportorigin, String airportdest, String startdate, String isFlexible) throws SQLException, ParseException{
 		Connection conn = null;
