@@ -1,9 +1,18 @@
+<%@ page import ="java.sql.*" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%
     if ((session.getAttribute("user") == null)) {
 %>
 You are not logged in<br/>
 <a href="index.jsp">Please Login</a>
 <%} else {
+%>
+<% 
+	ApplicationDB db = new ApplicationDB();
+	Connection con = db.getConnection();
 %>
 Welcome <%=session.getAttribute("user")%><br/>
 <a href='logout.jsp'>Log out</a><br/>
@@ -24,9 +33,10 @@ Add Customer:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 Add Customer Rep:
 <br>
-<form action="updateRegister.jsp" method="POST">
+<form action="updateEmpRegister.jsp" method="POST">
     First Name: <input type="text" name="first_name"/> <br/>
     Last Name: <input type="text" name="last_name"/> <br/>
+    SSN: <input type="text" name="ssn"/> <br/>
     Username: <input type="text" name="username"/> <br/>
     Password:<input type="password" name="password"/> <br/>
     <input type="submit" value="Submit"/>
@@ -36,9 +46,17 @@ Manage Customer Representatives:
 <br>
 	<form method="post" action="customerreps.jsp">
 		Choose Customer Rep
+		<%
+			Statement st = null;
+			ResultSet rs = null;
+			st = con.createStatement();
+			rs = st.executeQuery("select * from employee"); 
+		%>
 		<select name="lastname">
-			<option>Bussetty</option>
-			<option>Arshad</option>
+			<%
+				while(rs.next()){ %>
+        		<option value="<%=rs.getString(3)%>"><%=rs.getString(1)%> - <%=rs.getString(2)%> <%=rs.getString(3)%></option>
+                        <%}%>       
 		</select><br/>
 		Update Customer Rep Personal Info:<br/>
 		<table>

@@ -2,20 +2,26 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
   <display-name>TravelReservation</display-name>
   <servlet>
-    <!--servlet-name>logout</servlet-name>
-    <jsp-file>/Logout.jsp</jsp-file>
+    <servlet-name>logout</servlet-name>
+    <jsp-file>/logout.jsp</jsp-file>
     <servlet-name>login</servlet-name>
-    <jsp-file>/login.jsp</jsp-file-->
+    <jsp-file>/login.jsp</jsp-file>
     <servlet-name>UpdateRegisterServlet</servlet-name>
     <jsp-file>/updateRegister.jsp</jsp-file>
+
+    <servlet-name>checkEmpLoginDetails</servlet-name>
+    <jsp-file>/checkEmpLoginDetails.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-    <!--servlet-name>logout</servlet-name>
+    <servlet-name>logout</servlet-name>
     <url-pattern>/logout</url-pattern>
     <servlet-name>login</servlet-name>
-    <url-pattern>/login</url-pattern-->
+    <url-pattern>/login</url-pattern>
     <servlet-name>UpdateRegisterServlet</servlet-name>
     <url-pattern>/updateRegister</url-pattern>
+
+    <servlet-name>checkEmpLoginDetails</servlet-name>
+    <url-pattern>/checkEmpLoginDetails</url-pattern>
   </servlet-mapping>
   
   
