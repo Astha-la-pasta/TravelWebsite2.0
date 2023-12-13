@@ -51,8 +51,10 @@
                 
                 if (rowsAffected > 0) {
                     out.print("The flight has been deleted.");
+                    out.print("<p><a href=\"successemp.jsp\">Customer Rep Home</a></p>");
                 } else {
                     out.print("Flight not found or already deleted.");
+                    out.print("<p><a href=\"successemp.jsp\">Customer Rep Home</a></p>");
                 }
             }
 
@@ -62,6 +64,7 @@
             // Log the exception
             e.printStackTrace();
             out.print("Error in delete: " + e.getMessage());
+            out.print("<p><a href=\"successemp.jsp\">Customer Rep Home</a></p>");
         }
     %>
 

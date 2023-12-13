@@ -13,12 +13,12 @@
 <h1> Make a Flight </h1>
 <%
 
-ApplicationDB appdb = new com.cs336.pkg.ApplicationDB();
+ApplicationDB db = new ApplicationDB();
 
 String airlineid = request.getParameter("airlineid");
 
-Map<String, String> airports = appdb.getAirports();
-Map<String, String> aircrafts = appdb.getAircraftsFromAirline(airlineid);
+Map<String, String> airports = db.getAirports();
+Map<String, String> aircrafts = db.getAircraftsFromAirline(airlineid);
 
 %>
 <form action="saveFlightEntry.jsp" method="POST">

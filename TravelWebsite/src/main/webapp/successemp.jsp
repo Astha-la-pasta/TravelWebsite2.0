@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
+<%@ page import="java.io.*,java.util.*,java.sql.*, java.util.Map.Entry"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%
     if ((session.getAttribute("user") == null)) {
@@ -9,6 +9,7 @@ You are not logged in<br/>
 <a href="index.jsp">Please Login</a>
 <%} else {
 	%>
+	
 	<% 
 	ApplicationDB db = new ApplicationDB();
 	Connection con = db.getConnection();
@@ -85,6 +86,95 @@ View Flights by Airport:
 		</select><br/>
 		<input type="submit" value="Choose airport">
 	</form>
+	
+	<br>
+	<h2>Edit Airport Information</h2>
+    <form action="editAirportName.jsp" method="POST">
+        <p>Select Airport:</p>
+        <select name="airportid">
+            <%
+                ApplicationDB appdb = new ApplicationDB();
+                Map<String, String> airports = appdb.getAirports();
+
+                for (Entry<String, String> entry : airports.entrySet()) {
+            %>
+                <option value="<%= entry.getKey() %>"><%= entry.getKey() %> - <%= entry.getValue() %></option>
+            <%
+                }
+            %>
+        </select>
+
+        <p>Rename Airport:<input name="airportname"></input></p>
+
+        <p>
+            <input type="submit" value="Submit"/>
+        </p>
+    </form>
+	<br>
+	
+	<form action="confirmDeleteAirport.jsp">
+		<p>Select Airport to Delete:</p>
+        <select name="airportid">
+            <%
+                //Map<String, String> airports = db.getAirports();
+
+                for (Entry<String, String> entry : airports.entrySet()) {
+            %>
+                <option value="<%= entry.getKey() %>"><%= entry.getKey() %> - <%= entry.getValue() %></option>
+            <%
+                }
+            %>
+        </select>
+
+        <p>
+            <input type="submit" value="Submit"/>
+        </p>
+	</form>
+	
+	Delete Flight:
+<form action="deleteFlight.jsp" method="POST">
+    Choose Flight
+    <%
+        Statement st8 = null;
+        ResultSet rs8 = null;
+        st8 = con.createStatement();
+        rs8 = st8.executeQuery("SELECT * FROM flight"); 
+    %>
+    <select name="flightNum">
+        <%
+            while(rs8.next()){ %>
+            <option value="<%=rs8.getString(1)%>"><%=rs8.getString(1)%> - <%=rs8.getString(2)%></option>
+            <%}%>  
+    </select><br/>
+    <input type="submit" value="Delete Flight">
+</form>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
+    <!-- Your existing code ... -->
+
+    <h2>Create a Flight</h2>
+<form action="createFlights.jsp" method="POST">
+    <!-- ... other flight input fields ... -->
+
+    <p>Select Airline:</p>
+    <select name="airlineid">
+        <%
+            Statement stAirlines = con.createStatement();
+            ResultSet rsAirlines = stAirlines.executeQuery("SELECT * FROM airlinecompany");
+
+            while (rsAirlines.next()) {
+        %>
+                <option value="<%=rsAirlines.getString(1)%>"><%=rsAirlines.getString(1)%> - <%=rsAirlines.getString(2)%></option>
+        <%
+            }
+        %>
+    </select>
+
+    <p>
+        <input type="submit" value="Submit" />
+    </p>
+</form>
+
 
 Welcome <%=session.getAttribute("user")%><br/>
 <a href='logout.jsp'>Log out</a>

@@ -4,7 +4,7 @@
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 
 <%
-com.cs336.pkg.ApplicationDB appdb = new com.cs336.pkg.ApplicationDB();
+ApplicationDB db = new ApplicationDB();
 
 int isinternational = Integer.parseInt(request.getParameter("isInter"));
 int isdomestic = 0;
@@ -19,7 +19,7 @@ String depDate = request.getParameter("depDate");
 String destDate = request.getParameter("destDate");
 String aircraftid = request.getParameter("aircraft");
 String airlineid = request.getParameter("airlineid");
-int flightNum = appdb.saveFlight(depDate, destDate, depAirport, destAirport, isinternational, isdomestic, price, numStops, aircraftid, airlineid);%>
+int flightNum = db.saveFlight(depDate, destDate, depAirport, destAirport, isinternational, isdomestic, price, numStops, aircraftid, airlineid);%>
 
 A flight with the following information has been created:<br/>
 
@@ -29,7 +29,7 @@ A flight with the following information has been created:<br/>
 <%out.println("Departure Date: " + depDate);%><br/>
 <%out.println("Destination Date: " + destDate);%><br/>
 <%out.println("Departure Airport: " + depAirport);%><br/>
-<%out.println("Departure Airport: " + depAirport);%><br/>
+<%out.println("Destination Airport: " + destAirport);%><br/>
 <%if(isinternational == 1){
 	out.println("Scope: international");
 }
@@ -38,3 +38,4 @@ else{
 }%><br/>
 <%out.println("Price: " + price);%><br/>
 <%out.println("Stops: " + numStops);%><br/>
+<%out.print("<p><a href=\"successemp.jsp\">Customer Rep Home</a></p>");%>

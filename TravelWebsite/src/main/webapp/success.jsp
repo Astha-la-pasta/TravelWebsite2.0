@@ -122,6 +122,24 @@ Enter the flight number and your id:
 	</form>
 <br>
 
+
+
+<!-- Add a section for searching user and predefined questions by keyword -->
+<form method="get" action="userSearchesQuestions.jsp" style="margin-top: 10px;">
+    <label for="keyword">Search User and Predefined Questions:</label>
+    <input type="text" id="keyword" name="keyword">
+    <input type="submit" value="Search">
+</form>
+
+
 <%
     }
 %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome <%=session.getAttribute("user") %></title>
+</head>
+<body>
+</body>
+</html>
