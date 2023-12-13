@@ -1,5 +1,6 @@
+<%@ page import="com.cs336.pkg.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
+    pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 
@@ -10,84 +11,90 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%
-		List<String> list = new ArrayList<String>();
+    <%
+        List<String> list = new ArrayList<String>();
 
-		try {
+        try {
+            // Get the database connection
+            ApplicationDB db = new ApplicationDB();    
+            Connection con = db.getConnection();    
 
-			//Get the database connection
-			ApplicationDB db = new ApplicationDB();	
-			Connection con = db.getConnection();	
-			
-			//Create a SQL statement
-			Statement stmt = con.createStatement();
-			String lname = request.getParameter("entity");
-			String str = "select u.cid, u.lastname, u.firstname, date_format(t.datebought, '%Y-%m') booking_mth, sum(case when t.is_cancelled = 0 then (t.bookingcost+t.fare) else (t.bookingcost+ t.cancelfee) end ) as revenue from ticket t join users u ON (t.cid = u.cid) where u.lastname='"+lname+"' group by u.cid, u.lastname, u.firstname, date_format(t.datebought, '%Y-%m')";
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(str);
+            // Create a SQL statement
+            Statement stmt = con.createStatement();
+            String cid = request.getParameter("entity"); // Use the correct parameter name
 
-			//Make an HTML table to show the results in:
-			out.print("<table>");
+            String str = "select u.cid, u.lastname, u.firstname, date_format(t.datebought, '%Y-%m') booking_mth, " +
+                         "sum(case when t.isflexible = 0 then (t.bookingcost+t.fare) else (t.bookingcost+ t.cancelfee) end ) as revenue " +
+                         "from ticket t join users u ON (t.cid = u.cid) where u.cid='"+cid+"' group by u.cid, u.lastname, u.firstname, date_format(t.datebought, '%Y-%m')";
 
-			//make a row
-			out.print("<tr>");
-			//make a column
-			out.print("<td>");
-			out.print("CID");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Last Name");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("First Name");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Booking Month");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Revenue");
-			out.print("</td>");
-			out.print("</tr>");
+            // Run the query against the database.
+            ResultSet result = stmt.executeQuery(str);
 
-			//parse out the results
-			while (result.next()) {
-				//make a row
-				out.print("<tr>");
-				//make a column
-				out.print("<td>");
-				out.print(result.getString("cid"));
-				out.print("</td>");
-				
-				out.print("<td>");
-				out.print(result.getString("lastname"));
-				out.print("</td>");
-				
-				out.print("<td>");
-				out.print(result.getString("firstname"));
-				out.print("</td>");
+            // Make an HTML table to show the results in:
+            out.print("<table>");
 
-				out.print("<td>");
-				out.print(result.getString("booking_mth"));
-				out.print("</td>");
-				
-				out.print("<td>");
-				out.print(result.getString("revenue"));
-				out.print("</td>");
-				out.print("</tr>");
+            // Make a row
+            out.print("<tr>");
+            // Make a column
+            out.print("<td>");
+            out.print("CID");
+            out.print("</td>");
+            // Make a column
+            out.print("<td>");
+            out.print("Last Name");
+            out.print("</td>");
+            // Make a column
+            out.print("<td>");
+            out.print("First Name");
+            out.print("</td>");
+            // Make a column
+            out.print("<td>");
+            out.print("Booking Month");
+            out.print("</td>");
+            // Make a column
+            out.print("<td>");
+            out.print("Revenue");
+            out.print("</td>");
+            out.print("</tr>");
 
-			}
-			out.print("</table>");
+            // Parse out the results
+            while (result.next()) {
+                // Make a row
+                out.print("<tr>");
+                // Make a column
+                out.print("<td>");
+                out.print(result.getString("cid"));
+                out.print("</td>");
 
-			//close the connection.
-			con.close();
+                out.print("<td>");
+                out.print(result.getString("lastname"));
+                out.print("</td>");
 
-		} catch (Exception e) {
-		}
-	%>
+                out.print("<td>");
+                out.print(result.getString("firstname"));
+                out.print("</td>");
+
+                out.print("<td>");
+                out.print(result.getString("booking_mth"));
+                out.print("</td>");
+
+                out.print("<td>");
+                out.print(result.getString("revenue"));
+                out.print("</td>");
+                out.print("</tr>");
+            }
+            out.print("</table>");
+
+            // Close the connection.
+            con.close();
+
+        } catch (Exception e) {
+            // Handle the exception
+            out.print("failed to load data.");
+            out.print("<br>");
+            out.print(e);
+        }
+    %>
 
 </body>
 </html>
