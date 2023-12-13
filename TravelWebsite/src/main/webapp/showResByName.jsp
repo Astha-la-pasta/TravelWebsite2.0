@@ -24,7 +24,7 @@
             stmt = con.createStatement();
             String lname = request.getParameter("entity");
             String query = "SELECT u.cid, u.lastname, u.firstname, t.ticketNum, f.airlineid, t.datebought, t.fare, f.departuredate, f.destinationdate, f.departureairport, f.destinationairport " +
-                           "FROM ticket t JOIN flight f ON (f.flightNum=t.flightNum) JOIN users u ON (t.cid=u.cid) WHERE u.lastname='" + lname + "'";
+                           "FROM ticket t JOIN flight f ON (f.flightNum=t.flightNum) JOIN users u ON (t.cid=u.cid) WHERE u.cid='" + lname + "'";
 
             // Run the query against the database
             result = stmt.executeQuery(query);

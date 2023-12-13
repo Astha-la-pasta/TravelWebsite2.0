@@ -1,81 +1,52 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
-<%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1" import="com.cs336.pkg.*" %>
+<%@ page import="java.io.*,java.util.*,java.sql.*" %>
+<%@ page import="javax.servlet.http.*, javax.servlet.*" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Top Customer Revenue</title>
 </head>
 <body>
-	<%
-		try {
+    <%
+        try {
+            // Get the database connection
+            ApplicationDB db = new ApplicationDB();
+            Connection con = db.getConnection();
+            
+            // Create a SQL statement
+            Statement stmt = con.createStatement();
+            String str = "SELECT c.cid, c.lastname, c.firstname, " +
+                         "SUM(CASE WHEN t.isflexible = 0 THEN (t.bookingcost + t.fare) ELSE (t.bookingcost + t.cancelfee) END) AS revenue " +
+                         "FROM ticket t JOIN users c ON (c.cid = t.cid) " +
+                         "GROUP BY c.cid, c.lastname, c.firstname ORDER BY revenue DESC LIMIT 1";
+            
+            // Run the query against the database
+            ResultSet result = stmt.executeQuery(str);
 
-			//Get the database connection
-			ApplicationDB db = new ApplicationDB();	
-			Connection con = db.getConnection();
-			
-			//Create a SQL statement
-			Statement stmt = con.createStatement();
-			String str = "SELECT c.cid, c.lastname, c.firstname, sum(case when t.is_cancelled = 0 then (t.bookingcost+t.fare) else (t.bookingcost+t.cancelfee) end) AS revenue FROM ticket t join users c on (c.cid = t.cid) GROUP BY c.cid, c.lastname, c.firstname ORDER BY 4 DESC LIMIT 1";
-			
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(str);
+            // Display the HTML table header
+            out.print("<table>");
+            out.print("<tr><th>CID</th><th>Last Name</th><th>First Name</th><th>Total Revenue</th></tr>");
 
-			//Make an HTML table to show the results in:
-			out.print("<table>");
+            // Parse out the results and display in the table
+            while (result.next()) {
+                out.print("<tr>");
+                out.print("<td>" + result.getString("cid") + "</td>");
+                out.print("<td>" + result.getString("lastname") + "</td>");
+                out.print("<td>" + result.getString("firstname") + "</td>");
+                out.print("<td>" + result.getString("revenue") + "</td>");
+                out.print("</tr>");
+            }
 
-			//make a row
-			out.print("<tr>");
-			//make a column
-			out.print("<td>");
-			//print out column header
-			out.print("CID");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Last Name");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("First Name");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Total Revenue");
-			out.print("</td>");
-			out.print("</tr>");
+            out.print("</table>");
 
-			//parse out the results
-			while (result.next()) {
-				//make a row
-				out.print("<tr>");
-				//make a column
-				out.print("<td>");
-				out.print(result.getString("cid"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("lastname"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("firstname"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("revenue"));
-				out.print("</td>");
-				out.print("</tr>");
-
-			}
-			out.print("</table>");
-
-			//close the connection.
-			con.close();
-
-		} catch (Exception e) {
-		}
-	%>
-
+            // Close the connection
+            con.close();
+        } catch (Exception e) {
+            out.print("An error occurred: " + e.getMessage());
+            e.printStackTrace(); // Print the stack trace for debugging
+        }
+    %>
 </body>
 </html>
