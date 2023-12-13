@@ -122,9 +122,31 @@ Enter the flight number and your id:
 	</form>
 <br>
 
+<!-- Flight Booking Section -->
+<h2>Book a Flight</h2>
+<form method="post" action="bookFlight.jsp">
+    <label for="flightNum">Flight Number:</label>
+    <input type="text" id="flightNum" name="flightNum" required>
+    
+    <label for="isFlexible">Flexible Dates:</label>
+    <input type="checkbox" id="isFlexible" name="isFlexible"> (+/- 3 days)
+
+    <label for="classtype">Class Type:</label>
+    <select name="classtype" required>
+        <option value="Economy">Economy</option>
+        <option value="Business">Business</option>
+        <option value="First Class">First Class</option>
+    </select>
+
+    <input type="submit" value="Book Flight">
+</form>
+
+<br>
+
 
 
 <!-- Add a section for searching user and predefined questions by keyword -->
+<h2>Ask a question</h2>
 <form method="get" action="userSearchesQuestions.jsp" style="margin-top: 10px;">
     <label for="keyword">Search User and Predefined Questions:</label>
     <input type="text" id="keyword" name="keyword">

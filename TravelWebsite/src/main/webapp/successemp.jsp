@@ -68,6 +68,45 @@ View Reservations By Flight Number:
 <br>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 
+<h2>Make a Flight Reservation</h2>
+<form action="makeReservation.jsp" method="POST">
+    <p>Select Customer:</p>
+    <select name="cid">
+        <%
+            Statement stCustomers = con.createStatement();
+            ResultSet rsCustomers = stCustomers.executeQuery("SELECT * FROM users");
+
+            while (rsCustomers.next()) {
+        %>
+                <option value="<%=rsCustomers.getString("cid")%>"><%=rsCustomers.getString("firstname")%> <%=rsCustomers.getString("lastname")%></option>
+        <%
+            }
+        %>
+    </select>
+
+    <p>Select Flight:</p>
+    <select name="flightNum">
+        <%
+            Statement stFlights = con.createStatement();
+            ResultSet rsFlights = stFlights.executeQuery("SELECT * FROM flight");
+
+            while (rsFlights.next()) {
+        %>
+                <option value="<%=rsFlights.getString("flightNum")%>"><%=rsFlights.getString("flightNum")%> - <%=rsFlights.getString("departureairport")%> to <%=rsFlights.getString("destinationairport")%></option>
+        <%
+            }
+        %>
+    </select>
+
+    <!-- Add other reservation input fields as needed -->
+
+    <p>
+        <input type="submit" value="Make Reservation" />
+    </p>
+</form>
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
+
 View Flights by Airport:
 <br>
 	<form method="post" action="allFlights.jsp">
@@ -131,7 +170,72 @@ View Flights by Airport:
         </p>
 	</form>
 	
-	Delete Flight:
+	<h2>Add Airport to the Database</h2>
+<form action="addAirport.jsp" method="POST">
+    <p>Enter Airport Code:</p>
+    <input type="text" name="airportCode" required/><br/>
+
+    <p>Enter Airport Name:</p>
+    <input type="text" name="airportName" required/><br/>
+
+    <p>
+        <input type="submit" value="Add Airport"/>
+    </p>
+</form>
+	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
+
+<h2>Add Aircraft to the Database</h2>
+<form action="addAircraft.jsp" method="POST">
+    <p>Enter Aircraft ID:</p>
+    <input type="text" name="aircraftid" required/><br/>
+
+    <p>Select Airline:</p>
+    <select name="airlineid">
+        <%
+            Statement stAirlines = con.createStatement();
+            ResultSet rsAirlines = stAirlines.executeQuery("SELECT * FROM airlinecompany");
+
+            while (rsAirlines.next()) {
+        %>
+                <option value="<%=rsAirlines.getString(1)%>"><%=rsAirlines.getString(1)%> - <%=rsAirlines.getString(2)%></option>
+        <%
+            }
+        %>
+    </select><br/>
+
+    <p>
+        <input type="submit" value="Add Aircraft"/>
+    </p>
+</form>
+
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
+
+    <h2>Create a Flight</h2>
+<form action="createFlights.jsp" method="POST">
+    <!-- ... other flight input fields ... -->
+
+    <p>Select Airline:</p>
+    <select name="airlineid">
+        <%
+            Statement stAirlines1 = con.createStatement();
+            ResultSet rsAirlines1 = stAirlines.executeQuery("SELECT * FROM airlinecompany");
+
+            while (rsAirlines1.next()) {
+        %>
+                <option value="<%=rsAirlines1.getString(1)%>"><%=rsAirlines1.getString(1)%> - <%=rsAirlines1.getString(2)%></option>
+        <%
+            }
+        %>
+    </select>
+
+    <p>
+        <input type="submit" value="Submit" />
+    </p>
+</form>
+
+Delete Flight:
 <form action="deleteFlight.jsp" method="POST">
     Choose Flight
     <%
@@ -149,31 +253,6 @@ View Flights by Airport:
     <input type="submit" value="Delete Flight">
 </form>
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
-    <!-- Your existing code ... -->
-
-    <h2>Create a Flight</h2>
-<form action="createFlights.jsp" method="POST">
-    <!-- ... other flight input fields ... -->
-
-    <p>Select Airline:</p>
-    <select name="airlineid">
-        <%
-            Statement stAirlines = con.createStatement();
-            ResultSet rsAirlines = stAirlines.executeQuery("SELECT * FROM airlinecompany");
-
-            while (rsAirlines.next()) {
-        %>
-                <option value="<%=rsAirlines.getString(1)%>"><%=rsAirlines.getString(1)%> - <%=rsAirlines.getString(2)%></option>
-        <%
-            }
-        %>
-    </select>
-
-    <p>
-        <input type="submit" value="Submit" />
-    </p>
-</form>
 
 
 Welcome <%=session.getAttribute("user")%><br/>
