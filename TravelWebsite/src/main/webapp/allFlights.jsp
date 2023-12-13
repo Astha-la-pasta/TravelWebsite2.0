@@ -27,7 +27,8 @@
 			ResultSet result = stmt.executeQuery(str);
 
 			//Make an HTML table to show the results in:
-			out.print("<table>");
+			out.print("<table border='1'>");
+			//out.print("<table>");
 
 			//make a row
 			out.print("<tr>");

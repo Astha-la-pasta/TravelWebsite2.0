@@ -8,9 +8,20 @@
 You are not logged in<br/>
 <a href="index.jsp">Please Login</a>
 <%} else {
+	ApplicationDB db = new ApplicationDB();
+	Connection con = db.getConnection();
+	
+	/*String user = (String)session.getAttribute("user");
+	String userCID;
+	
+	String query = "select * from users u where u.username = " + "values(?)";
+	
+	PreparedStatement prepstmt = con.prepareStatement(query);
+	prepstmt.setString(1, user);
+	prepstmt.execute();*/
 %>
 		
-Welcome <%=session.getAttribute("user")%> <br/>
+Welcome <%=session.getAttribute("user")%> CID: <%=session.getAttribute("userCID") %><br/>
 <a href='logout.jsp'>Log out</a><br/>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 View Past Or Upcoming Reservations?
@@ -66,10 +77,19 @@ Filter flights by number of stops:
 Filter the flights by airline:
 <br>
 	<form method="post" action="filterAirlines.jsp">
+	<%
+			Statement st5 = null;
+			ResultSet rs5 = null;
+			st5 = con.createStatement();
+			rs5 = st5.executeQuery("select * from airlinecompany"); 
+		%>
 		<select name="airline" size=1>
-			<option value="LH">Lufthansa</option>
-			<option value="AM">American</option>
-			<option value="DE">Delta</option>
+			<%
+		while (rs5.next()) {
+		%>
+		<option value="<%=rs5.getString(1)%>"><%=rs5.getString(1)%> -
+			<%=rs5.getString(2)%></option>
+		<%}%>
 		</select>&nbsp;<br> <input type="submit" value="submit">
 	</form>
 <br>

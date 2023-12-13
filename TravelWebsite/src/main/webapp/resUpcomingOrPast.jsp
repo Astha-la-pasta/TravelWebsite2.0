@@ -1,130 +1,95 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
+    pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>View Reservations</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>View Reservations</title>
 </head>
 <body>
-	<%
-		try {
-			//Get the database connection
-			ApplicationDB db = new ApplicationDB();	
-			Connection con = db.getConnection();
-			
-			//Create a SQL statement
-			Statement stmt = con.createStatement();
-			String entity = request.getParameter("timing");
-			int customerid = Integer.parseInt(request.getParameter("cid"));
-			String str=null;
-			if(entity.equals("past")){
-				str = "SELECT t.ticketNum, (case when t.waitlist = 1 then ('On Waiting List') else ('Confirmed') end) AS tStatus, (case when t.is_oneway = 1 then ('One-way') else ('Round-trip') end) AS resType, f.departuredate, f.destinationdate, f.departureairport, f.destinationairport, f.airlineid, t.seatnum, t.fare FROM ticket t JOIN flight f ON t.flightNum=f.flightNum WHERE f.departuredate < sysdate() and cid=" + customerid;
-			}
-			else {
-				str = "SELECT t.ticketNum, (case when t.waitlist = 1 then ('On Waiting List') else ('Confirmed') end) AS tStatus, (case when t.is_oneway = 1 then ('One-way') else ('Round-trip') end) AS resType, f.departuredate, f.destinationdate, f.departureairport, f.destinationairport, f.airlineid, t.seatnum, t.fare FROM ticket t JOIN flight f ON t.flightNum=f.flightNum WHERE f.departuredate >= sysdate() and cid=" + customerid;
-			}
-			
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(str);
+    <%
+        try {
+            // Get the database connection
+            ApplicationDB db = new ApplicationDB();    
+            Connection con = db.getConnection();
+            
+            // Create a SQL statement
+            Statement stmt = con.createStatement();
+            String entity = request.getParameter("timing");
+            int customerid = Integer.parseInt(request.getParameter("cid"));
+            String str = null;
 
-			//Make an HTML table to show the results in:
-			out.print("<table>");
+            if (entity.equals("past")) {
+                str = "SELECT t.ticketNum, " +
+                        "(CASE WHEN t.waitlist = 1 THEN ('On Waiting List') ELSE ('Confirmed') END) AS tStatus, " +
+                        "(CASE WHEN t.is_oneway = 1 THEN ('One-way') ELSE ('Round-trip') END) AS resType, " +
+                        "f.departuredate, f.destinationdate, f.departureairport, f.destinationairport, " +
+                        "f.airlineid, t.seatnum, t.fare, t.is_cancelled " +
+                        "FROM ticket t JOIN flight f ON t.flightNum=f.flightNum " +
+                        "WHERE f.departuredate < sysdate() AND cid=?";
+            } else {
+                str = "SELECT t.ticketNum, " +
+                        "(CASE WHEN t.waitlist = 1 THEN ('On Waiting List') ELSE ('Confirmed') END) AS tStatus, " +
+                        "(CASE WHEN t.is_oneway = 1 THEN ('One-way') ELSE ('Round-trip') END) AS resType, " +
+                        "f.departuredate, f.destinationdate, f.departureairport, f.destinationairport, " +
+                        "f.airlineid, t.seatnum, t.fare, t.is_cancelled " +
+                        "FROM ticket t JOIN flight f ON t.flightNum=f.flightNum " +
+                        "WHERE f.departuredate >= sysdate() AND cid=?";
+            }
 
-			//make a row
-			out.print("<tr>");
-			//make a column
-			out.print("<td>");
-			out.print("Ticket Num");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Ticket Status");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Reservation Type");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Departure Date");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Destination Date");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Departure Airport");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Destination Airport");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Airline ID");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Seat Num");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Fare");
-			out.print("</td>");
-			out.print("</tr>");
+            try (PreparedStatement preparedStatement = con.prepareStatement(str)) {
+                preparedStatement.setInt(1, customerid);
 
-			//parse out the results
-			while (result.next()) {
-				//make a row
-				out.print("<tr>");
-				//make a column
-				
-				out.print("<td>");
-				out.print(result.getString("ticketNum"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("tStatus"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("resType"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("departuredate"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("destinationdate"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("departureairport"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("destinationairport"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("airlineid"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("seatnum"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("fare"));
-				out.print("</td>");
-				out.print("</tr>");
+                // Run the query against the database
+                ResultSet result = preparedStatement.executeQuery();
 
-			}
-			out.print("</table>");
+                // Make an HTML table to show the results in
+                out.print("<table>");
 
-			//close the connection.
-			con.close();
+                // Make a row for table headers
+                out.print("<tr>");
+                out.print("<td>Ticket Num</td>");
+                out.print("<td>Ticket Status</td>");
+                out.print("<td>Reservation Type</td>");
+                out.print("<td>Departure Date</td>");
+                out.print("<td>Destination Date</td>");
+                out.print("<td>Departure Airport</td>");
+                out.print("<td>Destination Airport</td>");
+                out.print("<td>Airline ID</td>");
+                out.print("<td>Seat Num</td>");
+                out.print("<td>Fare</td>");
+                out.print("<td>Cancellation Status</td>"); //Added column for cancellation status 
+                out.print("</tr>");
 
-		} catch (Exception e) {
-		}
-	%>
-
+                // Parse out the results and display in the HTML table
+                while (result.next()) {
+                    out.print("<tr>");
+                    out.print("<td>" + result.getString("ticketNum") + "</td>");
+                    out.print("<td>" + result.getString("tStatus") + "</td>");
+                    out.print("<td>" + result.getString("resType") + "</td>");
+                    out.print("<td>" + result.getString("departuredate") + "</td>");
+                    out.print("<td>" + result.getString("destinationdate") + "</td>");
+                    out.print("<td>" + result.getString("departureairport") + "</td>");
+                    out.print("<td>" + result.getString("destinationairport") + "</td>");
+                    out.print("<td>" + result.getString("airlineid") + "</td>");
+                    out.print("<td>" + result.getString("seatnum") + "</td>");
+                    out.print("<td>" + result.getString("fare") + "</td>");
+                    out.print("<td>" + (result.getBoolean("is_cancelled") ? "Cancelled" : "Not Cancelled") + "</td>");
+                    out.print("</tr>");
+                }
+                out.print("</table>");
+            } catch (SQLException e) {
+                out.print("An error occurred: " + e.getMessage());
+            } finally {
+                // Close the connection
+                con.close();
+            }
+        } catch (Exception e) {
+            out.print("An error occurred: " + e.getMessage());
+        }
+    %>
 </body>
 </html>

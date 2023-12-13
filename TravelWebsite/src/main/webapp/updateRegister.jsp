@@ -28,6 +28,7 @@
     preparedStmt.execute();
     
     session.setAttribute("user", userid);
+    session.setAttribute("userCID", cid);
     out.println("welcome " + userid);
     out.println("<a href='logout.jsp'>Log out</a>");
     response.sendRedirect("success.jsp");

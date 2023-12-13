@@ -1,8 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="com.cs336.pkg.*" %>
-<%@ page import="java.sql.*" %>
-<%@ page import="java.util.*" %>
-<%@ page import="javax.servlet.http.*, javax.servlet.*" %>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="com.cs336.pkg.*, java.sql.*, java.util.*" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +8,7 @@
 <body>
     <%
         Connection con = null;
-        Statement stmt = null;
+        PreparedStatement pstmt = null;
         ResultSet result = null;
 
         try {
@@ -20,14 +16,15 @@
             ApplicationDB db = new ApplicationDB();
             con = db.getConnection();
 
-            // Create a SQL statement
-            stmt = con.createStatement();
+            // Create a SQL prepared statement
             String lname = request.getParameter("entity");
             String query = "SELECT u.cid, u.lastname, u.firstname, t.ticketNum, f.airlineid, t.datebought, t.fare, f.departuredate, f.destinationdate, f.departureairport, f.destinationairport " +
-                           "FROM ticket t JOIN flight f ON (f.flightNum=t.flightNum) JOIN users u ON (t.cid=u.cid) WHERE u.cid='" + lname + "'";
+                           "FROM ticket t JOIN flight f ON (f.flightNum=t.flightNum) JOIN users u ON (t.cid=u.cid) WHERE u.cid=?";
+            pstmt = con.prepareStatement(query);
+            pstmt.setString(1, lname);
 
             // Run the query against the database
-            result = stmt.executeQuery(query);
+            result = pstmt.executeQuery();
 
             // Display the HTML table header
             out.print("<table border='1'>");
@@ -56,7 +53,7 @@
         } finally {
             // Close resources in the reverse order of their creation
             try { if (result != null) result.close(); } catch (SQLException e) { /* ignored */ }
-            try { if (stmt != null) stmt.close(); } catch (SQLException e) { /* ignored */ }
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { /* ignored */ }
             try { if (con != null) con.close(); } catch (SQLException e) { /* ignored */ }
         }
     %>
