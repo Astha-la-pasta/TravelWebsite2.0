@@ -11,6 +11,9 @@
 
     <servlet-name>checkEmpLoginDetails</servlet-name>
     <jsp-file>/checkEmpLoginDetails.jsp</jsp-file>
+
+    <servlet-name>showRevByFlight</servlet-name>
+    <jsp-file>/showRevByFlight.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
     <servlet-name>logout</servlet-name>
@@ -22,6 +25,9 @@
 
     <servlet-name>checkEmpLoginDetails</servlet-name>
     <url-pattern>/checkEmpLoginDetails</url-pattern>
+
+    <servlet-name>showRevByFlight</servlet-name>
+    <url-pattern>/showRevByFlight</url-pattern>
   </servlet-mapping>
   
   
