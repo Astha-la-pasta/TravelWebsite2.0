@@ -25,7 +25,7 @@
                 session.setAttribute("userCID", cid);
                 response.sendRedirect("success.jsp");
             } else {
-                response.sendRedirect("invalidLogin.jsp");
+            	out.println("Invalid password <a href='login.jsp'>try again</a>");
             }
         }
     } catch (SQLException e) {

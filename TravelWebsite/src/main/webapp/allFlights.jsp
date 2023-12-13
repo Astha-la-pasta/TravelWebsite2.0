@@ -1,98 +1,61 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
+    pageEncoding="ISO-8859-1" import="com.cs336.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>View Flights by Airport</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>View Flights by Airport</title>
 </head>
 <body>
-	<%
-		try {
+    <%
+        try {
+            // Get the database connection
+            ApplicationDB db = new ApplicationDB();
+            try (Connection con = db.getConnection()) {
+                // Create a SQL statement
+                String entity = request.getParameter("airport");
+                String str = "SELECT airlineid, flightNum, departureairport, destinationairport, departuredate, destinationdate FROM flight WHERE departureairport = ? OR destinationairport = ?";
 
-			//Get the database connection
-			ApplicationDB db = new ApplicationDB();	
-			Connection con = db.getConnection();
-			
-			//Create a SQL statement
-			Statement stmt = con.createStatement();
-			String entity = request.getParameter("airport");
-			
-			String str = "SELECT airlineid, flightNum, departureairport, destinationairport, departuredate, destinationdate FROM flight where departureairport = '"+ entity +"' or destinationairport = '"+entity+"'";
-			
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(str);
+                try (PreparedStatement pstmt = con.prepareStatement(str)) {
+                    pstmt.setString(1, entity);
+                    pstmt.setString(2, entity);
 
-			//Make an HTML table to show the results in:
-			out.print("<table border='1'>");
-			//out.print("<table>");
+                    // Run the query against the database.
+                    try (ResultSet result = pstmt.executeQuery()) {
+                        // Make an HTML table to show the results in:
+                        out.print("<table border='1'>");
+                        out.print("<tr>");
+                        out.print("<td>Airline ID</td>");
+                        out.print("<td>Flight Num</td>");
+                        out.print("<td>Departure Airport</td>");
+                        out.print("<td>Destination Airport</td>");
+                        out.print("<td>Departure Date</td>");
+                        out.print("<td>Destination Date</td>");
+                        out.print("</tr>");
 
-			//make a row
-			out.print("<tr>");
-			//make a column
-			out.print("<td>");
-			//print out column header
-			out.print("Airline ID");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Flight Num");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Departure Airport");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Destination Airport");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("Departure Date");
-			out.print("</td>");
-			//make a column
-			out.print("<td>");
-			out.print("destination Date");
-			out.print("</td>");
-			out.print("</tr>");
-
-			//parse out the results
-			while (result.next()) {
-				//make a row
-				out.print("<tr>");
-				//make a column
-				out.print("<td>");
-				out.print(result.getString("airlineid"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("flightNum"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("departureairport"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("destinationairport"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("departuredate"));
-				out.print("</td>");
-				out.print("<td>");
-				out.print(result.getString("destinationdate"));
-				out.print("</td>");
-				out.print("</tr>");
-
-			}
-			out.print("</table>");
-
-			//close the connection.
-			con.close();
-
-		} catch (Exception e) {
-		}
-	%>
-
+                        // Parse out the results
+                        while (result.next()) {
+                            out.print("<tr>");
+                            out.print("<td>" + result.getString("airlineid") + "</td>");
+                            out.print("<td>" + result.getString("flightNum") + "</td>");
+                            out.print("<td>" + result.getString("departureairport") + "</td>");
+                            out.print("<td>" + result.getString("destinationairport") + "</td>");
+                            out.print("<td>" + result.getString("departuredate") + "</td>");
+                            out.print("<td>" + result.getString("destinationdate") + "</td>");
+                            out.print("</tr>");
+                        }
+                        out.print("</table>");
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    %>
 </body>
 </html>
