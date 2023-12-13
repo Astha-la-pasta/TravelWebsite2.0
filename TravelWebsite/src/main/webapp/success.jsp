@@ -131,6 +131,24 @@ Enter the flight number and your id:
     <input type="submit" value="Search">
 </form>
 
+<br>
+
+<!-- Flight Search Section -->
+<h2>Flight Search</h2>
+<form method="get" action="searchFlights.jsp">
+    <label for="fromAirport">From Airport:</label>
+    <input type="text" id="fromAirport" name="fromAirport" required>
+    <label for="toAirport">To Airport:</label>
+    <input type="text" id="toAirport" name="toAirport" required>
+    <label for="departureDate">Departure Date:</label>
+    <input type="date" id="departureDate" name="departureDate" required>
+    <label for="returnDate">Return Date:</label>
+    <input type="date" id="returnDate" name="returnDate">
+    <label for="flexibleDates">Flexible Dates:</label>
+    <input type="checkbox" id="flexibleDates" name="flexibleDates"> (+/- 3 days)
+    <input type="submit" value="Search Flights">
+</form>
+
 
 <%
     }
