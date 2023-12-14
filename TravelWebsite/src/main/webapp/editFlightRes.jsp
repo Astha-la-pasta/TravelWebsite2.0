@@ -13,7 +13,7 @@
 <h1> Edit Flight Reservations</h1>
 <%
 List<String> classTypes = Arrays.asList("ECONOMY", "BUSINESS");
-ApplicationDB appdb = new com.cs336.pkg.ApplicationDB(); 
+ApplicationDB db = new ApplicationDB(); 
 %>
 
 <form action="updateNewReservation.jsp" method="POST">

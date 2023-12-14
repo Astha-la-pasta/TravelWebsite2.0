@@ -14,7 +14,7 @@ You are not logged in<br/>
 	ApplicationDB db = new ApplicationDB();
 	Connection con = db.getConnection();
 %>
-Welcome <%=session.getAttribute("user")%><br/>
+Welcome <%=session.getAttribute("user")%> EID: <%=session.getAttribute("eid") %><br/>
 <a href='logout.jsp'>Log out</a><br/>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 Add Customer:
@@ -105,6 +105,45 @@ View Reservations By Flight Number:
     </p>
 </form>
 
+<h2>Update Customer Flight Information</h2>
+<form action="editCustomerFlight.jsp" method="POST">
+    <p>Select Customer:</p>
+    <select name="customerId">
+        <%
+            Statement stCustomersForUpdate = con.createStatement();
+            ResultSet rsCustomersForUpdate = stCustomersForUpdate.executeQuery("SELECT * FROM users");
+
+            while (rsCustomersForUpdate.next()) {
+        %>
+                <option value="<%=rsCustomersForUpdate.getString("cid")%>"><%=rsCustomersForUpdate.getString("firstname")%> <%=rsCustomersForUpdate.getString("lastname")%></option>
+        <%
+            }
+        %>
+    </select>
+
+    <p>
+        <input type="submit" value="Update Customer Flight Information" />
+    </p>
+</form>
+
+<h2>View Passengers on Waitlist</h2>
+<form method="post" action="viewWaitlist.jsp">
+    <label for="flightNum">Select Flight:</label>
+    <select name="flightNum">
+        <%
+            Statement stFlightsForWaitlist = con.createStatement();
+            ResultSet rsFlightsForWaitlist = stFlightsForWaitlist.executeQuery("SELECT * FROM flight");
+
+            while (rsFlightsForWaitlist.next()) {
+        %>
+                <option value="<%= rsFlightsForWaitlist.getString("flightNum") %>"><%= rsFlightsForWaitlist.getString("flightNum") %> - <%= rsFlightsForWaitlist.getString("departureairport") %> to <%= rsFlightsForWaitlist.getString("destinationairport") %></option>
+        <%
+            }
+        %>
+    </select>
+    <br/>
+    <input type="submit" value="View Waitlist"/>
+</form>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 
 View Flights by Airport:
@@ -234,6 +273,27 @@ View Flights by Airport:
         <input type="submit" value="Submit" />
     </p>
 </form>
+<br>
+<!-- Add new section for selecting a flight to edit -->
+<h2>Select Flight to Edit</h2>
+<form method="post" action="editFlight.jsp">
+    <label for="flightNum">Select Flight:</label>
+    <select name="flightNum">
+        <%
+            Statement stFlights1 = con.createStatement();
+            ResultSet rsFlights1 = stFlights1.executeQuery("SELECT * FROM flight");
+
+            while (rsFlights1.next()) {
+        %>
+                <option value="<%= rsFlights1.getString("flightNum") %>"><%= rsFlights1.getString("flightNum") %> - <%= rsFlights1.getString("departureairport") %> to <%= rsFlights1.getString("destinationairport") %></option>
+        <%
+            }
+        %>
+    </select>
+    <br/>
+    <input type="submit" value="Select Flight"/>
+</form>
+<br>
 
 Delete Flight:
 <form action="deleteFlight.jsp" method="POST">
@@ -253,7 +313,14 @@ Delete Flight:
     <input type="submit" value="Delete Flight">
 </form>
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 
+
+<!-- Add this link after the existing sections -->
+<h4><a href='respondToQuestions.jsp'>Respond to User Questions</a></h4>
+
+<br>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~<br/>
 
 Welcome <%=session.getAttribute("user")%><br/>
 <a href='logout.jsp'>Log out</a>

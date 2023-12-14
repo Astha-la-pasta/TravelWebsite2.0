@@ -14,8 +14,10 @@
     ResultSet rs;
     rs = st.executeQuery("select * from employee where emp_username='" + userid + "' and emp_password='" + pwd + "'");
     if (rs.next()) {
+    	String eid = rs.getString("eid"); //added
         session.setAttribute("user", userid); // the username will be stored in the session
-        out.println("welcome " + userid);
+        session.setAttribute("eid", eid);
+        out.println("welcome " + userid + " EID: " + eid);
         out.println("<a href='logout.jsp'>Log out</a>");
         response.sendRedirect("successemp.jsp");
     } else {
