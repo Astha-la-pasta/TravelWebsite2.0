@@ -22,23 +22,24 @@
             // Create a SQL statement
             stmt = con.createStatement();
             String airline = request.getParameter("entity");
-            String query = "SELECT a.airlineid, a.name, DATE_FORMAT(t.datebought, '%Y-%m') AS booking_mth, " +
+            String query = "SELECT a.airlineid, a.name, f.flightNum, DATE_FORMAT(t.datebought, '%Y-%m') AS booking_mth, " +
                            "SUM(CASE WHEN t.isflexible = 0 THEN (t.bookingcost + t.fare) ELSE (t.bookingcost + t.cancelfee) END) AS revenue " +
                            "FROM ticket t JOIN flight f ON (t.flightNum = f.flightNum) JOIN airlinecompany a ON (a.airlineid = f.airlineid) " +
-                           "WHERE a.airlineid='" + airline + "' GROUP BY a.airlineid, a.name, booking_mth";
+                           "WHERE a.airlineid='" + airline + "' GROUP BY a.airlineid, a.name, f.flightNum, booking_mth";
 
             // Run the query against the database
             result = stmt.executeQuery(query);
 
             // Display the HTML table header
             out.print("<table>");
-            out.print("<tr><th>Airline ID</th><th>Airline Name</th><th>Booking Month</th><th>Revenue</th></tr>");
+            out.print("<tr><th>Airline ID</th><th>Airline Name</th><th>Flight Number</th><th>Booking Month</th><th>Revenue</th></tr>");
 
             // Parse out the results and display in the table
             while (result.next()) {
                 out.print("<tr>");
                 out.print("<td>" + result.getString("airlineid") + "</td>");
                 out.print("<td>" + result.getString("name") + "</td>");
+                out.print("<td>" + result.getString("flightNum") + "</td>");
                 out.print("<td>" + result.getString("booking_mth") + "</td>");
                 out.print("<td>" + result.getString("revenue") + "</td>");
                 out.print("</tr>");

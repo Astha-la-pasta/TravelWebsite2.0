@@ -34,7 +34,7 @@
 
                     // TODO: Implement logic to insert the booking into the database
                     // Placeholder SQL query, update accordingly based on your schema
-                    String insertBookingQuery = "INSERT INTO ticket (cid, flightNum, isflexible, classtype, datebought) VALUES (?, ?, ?, ?, ?)";
+                    String insertBookingQuery = "INSERT INTO ticket (cid, flightNum, isflexible, bookingcost, seatnum, fare, datebought, is_oneway, waitlist, is_roundtrip, classtype) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     PreparedStatement insertBookingStmt = con.prepareStatement(insertBookingQuery);
 
                     // Set appropriate values based on your database schema
@@ -44,8 +44,14 @@
                     insertBookingStmt.setInt(1, userCID);
                     insertBookingStmt.setInt(2, flightNum);
                     insertBookingStmt.setBoolean(3, isFlexible);
-                    insertBookingStmt.setString(4, classType);
-                    insertBookingStmt.setDate(5, new java.sql.Date(new java.util.Date().getTime()));
+                    insertBookingStmt.setInt(4, 25); // bookingcost
+                    insertBookingStmt.setInt(5, 0);  // seatnum (provide a valid seat number)
+                    insertBookingStmt.setFloat(6, 0.0f); // fare (provide a valid fare)
+                    insertBookingStmt.setDate(7, new java.sql.Date(new java.util.Date().getTime()));
+                    insertBookingStmt.setBoolean(8, true);  // is_oneway (provide a valid value)
+                    insertBookingStmt.setBoolean(9, false); // waitlist (provide a valid value)
+                    insertBookingStmt.setBoolean(10, true); // is_roundtrip (provide a valid value)
+                    insertBookingStmt.setString(11, classType);
 
                     // Execute the query
                     insertBookingStmt.executeUpdate();
