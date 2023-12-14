@@ -38,7 +38,10 @@
                     PreparedStatement insertBookingStmt = con.prepareStatement(insertBookingQuery);
 
                     // Set appropriate values based on your database schema
-                    insertBookingStmt.setInt(1, (int) session.getAttribute("userCID"));
+                    String userCIDStr = (String) session.getAttribute("userCID");
+                    int userCID = Integer.parseInt(userCIDStr);
+
+                    insertBookingStmt.setInt(1, userCID);
                     insertBookingStmt.setInt(2, flightNum);
                     insertBookingStmt.setBoolean(3, isFlexible);
                     insertBookingStmt.setString(4, classType);

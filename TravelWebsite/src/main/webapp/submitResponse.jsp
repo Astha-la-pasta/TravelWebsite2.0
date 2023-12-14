@@ -17,7 +17,16 @@
         String responseText = request.getParameter("responseText");
 
         // Retrieve the employee ID from the session
-        int eid = Integer.parseInt((String) session.getAttribute("eid"));
+        String eidString = (String) session.getAttribute("eid");
+        int eid = 0; // default value or handle differently based on your requirement
+
+        if (eidString != null) {
+            try {
+                eid = Integer.parseInt(eidString);
+            } catch (NumberFormatException e) {
+                // Handle the exception (e.g., log it, set a default value, etc.)
+            }
+        }
 
         try {
             // Insert the response into the database
